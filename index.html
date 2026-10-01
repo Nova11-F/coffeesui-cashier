@@ -1,14 +1,158 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coffee Shop</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <i data-lucide="coffee" class="icon-coffee"></i>
+        <h1>Coffeesui</h1>
+      </div>
+      <div class="search-box" id="search-box">
+        <i data-lucide="search" class="icon-search"></i>
+        <input type="text" placeholder="Search products..." />
+      </div>
+      <div class="profile">
+        <p>Kasir 01<br /><span>online</span></p>
+        <i data-lucide="user-round" class="icon-user"></i>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+      <!-- categories -->
+      <div class="categories">
+        <button class="category-btn active" data-category="all" id="category-btn">
+          All <span>70</span>
+        </button>
+        <button class="category-btn" data-category="coffee" id="category-btn">
+          Coffee <span>10</span>
+        </button>
+        <button class="category-btn" data-category="non-coffee" id="category-btn">
+          Non-Coffee <span>10</span>
+        </button>
+        <button class="category-btn" data-category="tea" id="category-btn">
+          Tea <span>10</span>
+        </button>
+        <button class="category-btn" data-category="cake" id="category-btn">
+          Cake <span>10</span>
+        </button>
+        <button class="category-btn" data-category="pastry" id="category-btn">
+          Pastry <span>10</span>
+        </button>
+        <button class="category-btn" data-category="sandwich" id="category-btn">
+          Sandwich <span>10</span>
+        </button>
+        <button class="category-btn" data-category="snack" id="category-btn">
+          Snack <span>10</span>
+        </button>
+      </div>
+
+      <aside class="cart">
+        <div class="cart-header">
+          <h2>Order Details</h2>
+          <p>4 items</p>
+        </div>
+        <div class="cart-items">
+          <div class="cart-item">
+            <img src="img/snack.png" alt="Americano" />
+            <div class="item-info">
+              <h3>Americano</h3>
+              <p>Rp 15.000</p>
+            </div>
+            <div class="item-quantity">
+              <button class="decrease-btn">-</button>
+              <span class="quantity">1</span>
+              <button class="increase-btn">+</button>
+            </div>
+          </div>
+          <div class="cart-item">
+            <img src="img/snack.png" alt="Americano" />
+            <div class="item-info">
+              <h3>Americano</h3>
+              <p>Rp 15.000</p>
+            </div>
+            <div class="item-quantity">
+              <button class="decrease-btn">-</button>
+              <span class="quantity">1</span>
+              <button class="increase-btn">+</button>
+            </div>
+          </div>
+          <div class="cart-item">
+            <img src="img/snack.png" alt="Americano" />
+            <div class="item-info">
+              <h3>Americano</h3>
+              <p>Rp 15.000</p>
+            </div>
+            <div class="item-quantity">
+              <button class="decrease-btn">-</button>
+              <span class="quantity">1</span>
+              <button class="increase-btn">+</button>
+            </div>
+          </div>
+          <div class="cart-item">
+            <img src="img/snack.png" alt="Americano" />
+            <div class="item-info">
+              <h3>Americano</h3>
+              <p>Rp 15.000</p>
+            </div>
+            <div class="item-quantity">
+              <button class="decrease-btn">-</button>
+              <span class="quantity">1</span>
+              <button class="increase-btn">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="cart-total">
+          <div class="cart-total-detail" id="cart-detail">
+            <div>
+            <p>subtotal </p>
+            <p id="subtotal">Rp 60.000</p>
+            </div>
+            <div>
+            <p>Tax (10%)</p>
+            <p id="pajak">Rp 6.000</p>
+            </div>
+          </div>
+          <div class="cart-total-harga" id="cart-harga">
+            <p>Total </p>
+            <p id="total-price" class="total-price">Rp 66.000</p>
+          </div>
+        </div>
+        <div class="cart-button">
+        <button id="checkout-btn" class="checkout-btn"><i data-lucide="credit-card"></i>Bayar sekarang</button>
+        </div>
+      </aside>
+
+      <section class="products">
+        <!-- Product items will be dynamically added here -->
+      </section>
+
+
+    </main>
+
+    <!-- Lucide Icon -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      lucide.createIcons();
+    </script>
+
     <!-- Javascript -->
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
