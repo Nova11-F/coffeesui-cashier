@@ -42,6 +42,8 @@
 body {
   font-family: "Plus Jakarta Sans", sans-serif;
   background-color: var(--color-background);
+  overflow: hidden;
+  height: 100%;
 }
 
 header {
@@ -50,6 +52,7 @@ header {
   align-items: center;
   margin: 20px 40px;
   padding: 0;
+  height: 64px;
 }
 
 .logo {
@@ -145,6 +148,7 @@ header {
   grid-template-rows: auto 1fr;
   gap: 16px;
   margin: 0 40px;
+  height: calc(100vh - 64px);
 }
 
 .categories {
@@ -214,6 +218,10 @@ header {
     background-color: var(--color-card);
     border-radius: 10px;
     border: 1px solid var(--color-text-muted);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 85vh;
 }
 
 .cart-header {
@@ -222,11 +230,12 @@ header {
     align-items: center;
     padding: 0 16px;
     border-radius: 8px 8px 0 0;
-    border-bottom : 1px solid var(--color-text-muted)
+    border-bottom : 1px solid var(--color-text-muted);
+    background-color: var(--color-text-muted);
 }
 
 .cart-header h2 {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 800;
     color: var(--color-text);
 }
@@ -245,6 +254,9 @@ header {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    min-height: 0;
+    overflow-y: auto;
+    flex: 1;
 }
 
 .cart-item {
@@ -254,6 +266,7 @@ header {
     border-bottom: 1px solid var(--color-text-muted);
     padding-bottom: 12px;
 }
+
 
 .cart-item img{
     width: 64px;
@@ -307,16 +320,21 @@ header {
     border-radius: 4px;
     border: none;
     padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 }
 
 .item-quantity button:hover{
     background-color: var(--color-primary);
+    color: var(--color-light);
 }
 
 .cart-total {
     padding: 0 16px;
+    display: flex;
+    flex-direction: column;
 }
 
 .cart-total .cart-total-detail p,
@@ -387,8 +405,66 @@ header {
   grid-row: 2;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 24px;
-  padding: 20px;
+  gap: 8px;
+  padding: 24px 16px;
+  margin-bottom: 24px;
   background-color: var(--color-card);
   border-radius: 8px;
+  overflow: hidden;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.product-item{
+  border: 1px solid var(--color-text-muted);
+  border-radius: 8px;
+  width: fit-content;
+  height: fit-content;
+}
+
+.product-item img{
+  width: 200px;
+  height: 180px;
+  border-radius: 8px 8px 0 0;
+}
+
+.product-info{
+  padding: 4px 16px;
+}
+
+.product-info h3{
+  margin-top: 4px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  color: var(--color-primary-dark);
+}
+
+.product-order h4{
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 18px;
+  color: var(--color-text);
+}
+
+.product-order{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.product-order button{
+    background-color: var(--color-primary);
+    color: var(--color-soft);
+    border-radius: 8px;
+    border: none;
+    padding: 8px 16px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.product-order button:hover{
+  background-color: var(--color-hover);
 }
