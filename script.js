@@ -335,17 +335,21 @@ const products = [
   },
 ];
 
-// Render Categories
+// Category & Search Box
 function getCategoryCount(category) {
   if (category === "all") {
     return products.length;
   }
 
-  return products.filter((product) => product.category === category).length;
+  return products.filter(
+    (product) => product.category === category
+  ).length;
 }
 
+
 function renderCategories() {
-  const categoryContainer = document.getElementById("categories");
+  const categoryContainer =
+    document.getElementById("categories");
 
   categoryContainer.innerHTML = "";
 
@@ -365,13 +369,18 @@ function renderCategories() {
         ? "All"
         : category
             .split("-")
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .map(
+              (word) =>
+                word.charAt(0).toUpperCase() +
+                word.slice(1)
+            )
             .join(" ");
 
     const count = getCategoryCount(category);
 
     button.innerHTML = `
       ${categoryName}
+
       <span class="categories-item">
         ${count}
       </span>
@@ -385,32 +394,127 @@ function renderCategories() {
   });
 }
 
+
+
+let currentCategory = "all";
+let searchQuery = "";
+
+// Filter Products
+function getFilteredProducts() {
+  return products.filter((product) => {
+
+    const matchCategory =
+      currentCategory === "all" ||
+      product.category.toLowerCase() ===
+        currentCategory.toLowerCase();
+
+    const matchSearch =
+      product.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+    return matchCategory && matchSearch;
+  });
+}
+
+// Render Filtered Products
+function renderFilteredProducts() {
+  const filteredProducts =
+    getFilteredProducts();
+
+      const productList = document.getElementById("products");
+
+  // Jika tidak ada produk
+  if (filteredProducts.length === 0) {
+    productList.innerHTML = `
+      <div class="product-not-found">
+        <div class="not-found-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search preview-icon"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </div>
+
+        <h3>Produk tidak ditemukan</h3>
+
+        <p>
+          Maaf, produk yang kamu cari tidak tersedia.
+        </p>
+
+        <button type="button" id="reset-search">
+          Tampilkan Semua Produk
+        </button>
+      </div>
+    `;
+
+    // Tombol untuk kembali menampilkan semua produk
+    document
+      .getElementById("reset-search")
+      .addEventListener("click", () => {
+        currentCategory = "all";
+        searchQuery = "";
+
+        searchInput.value = "";
+
+        document
+          .querySelectorAll(".category-btn")
+          .forEach((button) => {
+            button.classList.remove("active");
+          });
+
+        document
+          .querySelector(
+            '.category-btn[data-category="all"]'
+          )
+          ?.classList.add("active");
+
+        renderFilteredProducts();
+      });
+
+    return;
+  }
+
+  renderProducts(filteredProducts);
+}
+
+// Change Category
 function changeCategories(category) {
-  const categoryButtons = document.querySelectorAll(".category-btn");
+  const categoryButtons =
+    document.querySelectorAll(".category-btn");
 
   categoryButtons.forEach((button) => {
     button.classList.remove("active");
   });
 
   const activeButton = document.querySelector(
-    `.category-btn[data-category="${category}"]`,
+    `.category-btn[data-category="${category}"]`
   );
 
-  activeButton.classList.add("active");
-
-  if (category === "all") {
-    renderProducts(products);
-    return;
+  if (activeButton) {
+    activeButton.classList.add("active");
   }
 
-  const filteredProducts = products.filter(
-    (product) => product.category === category,
-  );
+  currentCategory = category;
 
-  renderProducts(filteredProducts);
+  renderFilteredProducts();
+}
+
+// Search Box
+const productList =
+  document.getElementById("products");
+
+const searchInput =
+  document.getElementById("search-input");
+
+if (searchInput) {
+  searchInput.addEventListener("input", (event) => {
+
+    searchQuery = event.target.value;
+
+    renderFilteredProducts();
+
+  });
 }
 
 renderCategories();
+renderFilteredProducts();
 
 
 // Render Product
@@ -435,6 +539,7 @@ function renderProducts(productList) {
       <div class="product-info">
 
         <h3>${product.name}</h3>
+        <p>${product.category}</p>
 
         <div class="product-order">
 
@@ -457,4 +562,4 @@ function renderProducts(productList) {
   });
 }
 
-renderProducts();
+renderProducts(products);
