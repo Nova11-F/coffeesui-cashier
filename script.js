@@ -563,3 +563,49 @@ function renderProducts(productList) {
 }
 
 renderProducts(products);
+
+function renderCart(){
+  const cartContainer = document.getElementById("cart");
+
+  cartContainer.innerHTML= `
+        <div class="cart-header">
+          <h2>Order Details</h2>
+          <p>4 item</p>
+        </div>
+        <div class="cart-items">
+          <div class="cart-item">
+            <img src="img/coffee.png" alt="Americano" class="cart-image" id="cart-image" />
+            <div class="item-info">
+              <h3>Americano</h3>
+              <p>Rp 15.000</p>
+            </div>
+            <div class="item-quantity">
+              <button class="decrease-btn">-</button>
+              <span class="quantity">1</span>
+              <button class="increase-btn">+</button>
+            </div>
+          </div>
+        <div class="cart-total">
+          <div class="cart-total-detail" id="cart-detail">
+            <div>
+            <p>subtotal </p>
+            <p id="subtotal">Rp 60.000</p>
+            </div>
+            <div>
+            <p>Tax (10%)</p>
+            <p id="pajak">Rp 6.000</p>
+            </div>
+          </div>
+          <div class="cart-total-harga" id="cart-harga">
+            <p>Total </p>
+            <p id="total-price" class="total-price">Rp 66.000</p>
+          </div>
+        </div>
+        <div class="cart-button">
+        <button id="checkout-btn" class="checkout-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-credit-card preview-icon"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/><path d="M6 14h2"/></svg>Bayar sekarang</button>
+        </div>
+        `;
+}
+
+renderCart();
