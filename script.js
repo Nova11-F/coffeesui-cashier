@@ -117,7 +117,7 @@ const products = [
   // ==================== TEA ====================
   {
     id: 15,
-    name: "English Breakfast Tea",
+    name: " Tea",
     category: "tea",
     price: 12000,
     image: "img/tea.png",
@@ -341,15 +341,11 @@ function getCategoryCount(category) {
     return products.length;
   }
 
-  return products.filter(
-    (product) => product.category === category
-  ).length;
+  return products.filter((product) => product.category === category).length;
 }
 
-
 function renderCategories() {
-  const categoryContainer =
-    document.getElementById("categories");
+  const categoryContainer = document.getElementById("categories");
 
   categoryContainer.innerHTML = "";
 
@@ -369,11 +365,7 @@ function renderCategories() {
         ? "All"
         : category
             .split("-")
-            .map(
-              (word) =>
-                word.charAt(0).toUpperCase() +
-                word.slice(1)
-            )
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" ");
 
     const count = getCategoryCount(category);
@@ -394,24 +386,19 @@ function renderCategories() {
   });
 }
 
-
-
 let currentCategory = "all";
 let searchQuery = "";
 
 // Filter Products
 function getFilteredProducts() {
   return products.filter((product) => {
-
     const matchCategory =
       currentCategory === "all" ||
-      product.category.toLowerCase() ===
-        currentCategory.toLowerCase();
+      product.category.toLowerCase() === currentCategory.toLowerCase();
 
-    const matchSearch =
-      product.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+    const matchSearch = product.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
 
     return matchCategory && matchSearch;
   });
@@ -419,10 +406,9 @@ function getFilteredProducts() {
 
 // Render Filtered Products
 function renderFilteredProducts() {
-  const filteredProducts =
-    getFilteredProducts();
+  const filteredProducts = getFilteredProducts();
 
-      const productList = document.getElementById("products");
+  const productList = document.getElementById("products");
 
   // Jika tidak ada produk
   if (filteredProducts.length === 0) {
@@ -445,28 +431,22 @@ function renderFilteredProducts() {
     `;
 
     // Tombol untuk kembali menampilkan semua produk
-    document
-      .getElementById("reset-search")
-      .addEventListener("click", () => {
-        currentCategory = "all";
-        searchQuery = "";
+    document.getElementById("reset-search").addEventListener("click", () => {
+      currentCategory = "all";
+      searchQuery = "";
 
-        searchInput.value = "";
+      searchInput.value = "";
 
-        document
-          .querySelectorAll(".category-btn")
-          .forEach((button) => {
-            button.classList.remove("active");
-          });
-
-        document
-          .querySelector(
-            '.category-btn[data-category="all"]'
-          )
-          ?.classList.add("active");
-
-        renderFilteredProducts();
+      document.querySelectorAll(".category-btn").forEach((button) => {
+        button.classList.remove("active");
       });
+
+      document
+        .querySelector('.category-btn[data-category="all"]')
+        ?.classList.add("active");
+
+      renderFilteredProducts();
+    });
 
     return;
   }
@@ -476,15 +456,14 @@ function renderFilteredProducts() {
 
 // Change Category
 function changeCategories(category) {
-  const categoryButtons =
-    document.querySelectorAll(".category-btn");
+  const categoryButtons = document.querySelectorAll(".category-btn");
 
   categoryButtons.forEach((button) => {
     button.classList.remove("active");
   });
 
   const activeButton = document.querySelector(
-    `.category-btn[data-category="${category}"]`
+    `.category-btn[data-category="${category}"]`,
   );
 
   if (activeButton) {
@@ -497,25 +476,20 @@ function changeCategories(category) {
 }
 
 // Search Box
-const productList =
-  document.getElementById("products");
+const productList = document.getElementById("products");
 
-const searchInput =
-  document.getElementById("search-input");
+const searchInput = document.getElementById("search-input");
 
 if (searchInput) {
   searchInput.addEventListener("input", (event) => {
-
     searchQuery = event.target.value;
 
     renderFilteredProducts();
-
   });
 }
 
 renderCategories();
 renderFilteredProducts();
-
 
 // Render Product
 function renderProducts(productList) {
@@ -523,8 +497,7 @@ function renderProducts(productList) {
 
   productContainer.innerHTML = "";
 
-  productList.forEach(product => {
-
+  productList.forEach((product) => {
     const productItem = document.createElement("div");
 
     productItem.classList.add("product-item");
@@ -548,6 +521,7 @@ function renderProducts(productList) {
           <button 
             type="button"
             class="add-product"
+            id="add-Cart"
             data-id="${product.id}"
           >
             +
@@ -564,48 +538,200 @@ function renderProducts(productList) {
 
 renderProducts(products);
 
-function renderCart(){
+let cart = [];
+
+function addToCart(productId){
+  const productCart = products.find((product) => product.id === productId);
+
+  const cartItems = cart.find((item) => item.id === productId);
+
+  if (cartItems) {
+    cartItems.quantity += 1;
+  }else{
+    cart.push({...productCart,
+      quantity: 1
+    });
+  }
+  
+  renderCart();
+}
+
+document.addEventListener("click", (e) => {
+  if(e.target.classList.contains("add-product")){
+    
+    const productId = Number(e.target.dataset.id);
+
+    addToCart(productId)
+  }
+})
+
+function decreaseQuantity(productId) {
+
+  const cartItem = cart.find(
+    item => item.id === productId
+  );
+
+  if (!cartItem) return;
+
+  if (cartItem.quantity > 1) {
+
+    cartItem.quantity -= 1;
+
+  } else {
+
+    const index = cart.findIndex(
+      item => item.id === productId
+    );
+
+    cart.splice(index, 1);
+  }
+
+  renderCart();
+}
+
+document.addEventListener("click", function(event) {
+
+  if (event.target.classList.contains("decrease-btn")) {
+
+    const productId = Number(
+      event.target.dataset.id
+    );
+
+    decreaseQuantity(productId);
+  }
+
+});
+
+function renderCart() {
   const cartContainer = document.getElementById("cart");
 
-  cartContainer.innerHTML= `
+  cartContainer.innerHTML="";
+
+  let subTotal = 0;
+
+cart.forEach((item) => {
+  subTotal += item.price * item.quantity;
+});
+
+const tax = subTotal * 0.10;
+
+const totalHarga = subTotal + tax;
+
+  if (cart.length === 0) {
+    cartContainer.innerHTML = `
+      <div class="cart-no-item">
+
         <div class="cart-header">
           <h2>Order Details</h2>
-          <p>4 item</p>
+          <p>${cart.length} item</p>
         </div>
-        <div class="cart-items">
-          <div class="cart-item">
-            <img src="img/coffee.png" alt="Americano" class="cart-image" id="cart-image" />
-            <div class="item-info">
-              <h3>Americano</h3>
-              <p>Rp 15.000</p>
-            </div>
-            <div class="item-quantity">
-              <button class="decrease-btn">-</button>
-              <span class="quantity">1</span>
-              <button class="increase-btn">+</button>
-            </div>
+
+        <div class="cart-no-item-detail">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart-plus preview-icon"><path d="M16 5h6"/><path d="M19 2v6"/><path d="m2.05 2.05 1.099-.028a1 1 0 011.008.815l2.69 14.347A1 1 0 007.83 18H18"/><path d="M4.564 5H12"/><path d="M6.25 14h12.712a2 2 0 001.991-1.57l.172-1.041"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></svg>
+          <h3>Belum Ada Pesanan</h3>
+          <p>
+            Klik atau pilih produk untuk menambahkan ke daftar.
+          </p>
+        </div>
+
+        <div class="cart-footer">
+          ...
+        </div>
+
+      </div>
+    `;
+
+    return;
+  }
+
+
+  cartContainer.innerHTML = `
+    <div class="cart-header">
+      <h2>Order Details</h2>
+      <p>${cart.length} item</p>
+    </div>
+
+    <div class="cart-items"></div>
+
+    <div class="cart-footer">
+      <div class="cart-total">
+
+        <div class="cart-total-detail">
+
+          <div>
+            <p>Subtotal</p>
+            <p id="subtotal">Rp ${subTotal.toLocaleString("id-ID")}</p>
           </div>
-        <div class="cart-total">
-          <div class="cart-total-detail" id="cart-detail">
-            <div>
-            <p>subtotal </p>
-            <p id="subtotal">Rp 60.000</p>
-            </div>
-            <div>
+
+          <div>
             <p>Tax (10%)</p>
-            <p id="pajak">Rp 6.000</p>
-            </div>
+            <p id="pajak">Rp ${tax.toLocaleString("id-ID")}</p>
           </div>
-          <div class="cart-total-harga" id="cart-harga">
-            <p>Total </p>
-            <p id="total-price" class="total-price">Rp 66.000</p>
-          </div>
+
         </div>
-        <div class="cart-button">
+
+        <div class="cart-total-harga">
+          <p>Total</p>
+          <p id="total-price" class="total-price">
+            Rp ${totalHarga.toLocaleString("id-ID")}
+          </p>
+        </div>
+
+      </div>
+
+      <div class="cart-button">
         <button id="checkout-btn" class="checkout-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-credit-card preview-icon"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/><path d="M6 14h2"/></svg>Bayar sekarang</button>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-credit-card preview-icon"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/><path d="M6 14h2"/></svg>
+          Bayar sekarang
+        </button>
+      </div>
+    </div>
+  `;
+
+  const cartItems = document.querySelector(".cart-items");
+
+  cart.forEach((item) => {
+
+    cartItems.innerHTML += `
+      <div class="cart-item">
+
+        <img 
+          src="${item.image}" 
+          alt="${item.name}" 
+          class="cart-image"
+        />
+
+        <div class="item-info">
+          <h3 class="cart-name">
+            ${item.name}
+          </h3>
+          <p class="cart-price">
+            Rp. ${item.price.toLocaleString("id-ID")}
+          </p>
         </div>
-        `;
+
+        <div class="item-quantity">
+          <button 
+            class="decrease-btn"
+            data-id="${item.id}"
+          >
+            -
+          </button>
+          <span class="quantity">
+            ${item.quantity}
+          </span>
+          <button 
+            class="add-product"
+            data-id="${item.id}"
+          >
+            +
+          </button>
+
+        </div>
+
+      </div>
+    `;
+  });
 }
 
 renderCart();
