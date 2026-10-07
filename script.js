@@ -611,20 +611,29 @@ document.addEventListener("click", function(event) {
 
 });
 
+function getTotalHarga() {
+    let subTotal = 0;
+
+    cart.forEach((item) => {
+        subTotal += item.price * item.quantity;
+    });
+
+    const tax = subTotal * 0.10;
+    const totalHarga = subTotal + tax;
+
+    return{
+      tax,
+      subTotal,
+      totalHarga
+    };
+};
+
+getTotalHarga();
+
 function renderCart() {
   const cartContainer = document.getElementById("cart");
-
+  const { subTotal, tax, totalHarga } = getTotalHarga();
   cartContainer.innerHTML="";
-
-  let subTotal = 0;
-
-cart.forEach((item) => {
-  subTotal += item.price * item.quantity;
-});
-
-const tax = subTotal * 0.10;
-
-const totalHarga = subTotal + tax;
 
   if (cart.length === 0) {
     cartContainer.innerHTML = `
@@ -744,3 +753,162 @@ const totalHarga = subTotal + tax;
 }
 
 renderCart();
+
+const overlay = document.getElementById("checkout-overlay");
+
+document.getElementById("cart").addEventListener("click", (e) => {
+  if (e.target.closest("#checkout-btn")) {
+    renderCheckOutPage();
+    overlay.classList.add("active");
+  }
+});
+
+function closeCheckOutPage() {
+  overlay.classList.remove("active");
+}
+
+overlay.addEventListener("click", (e) => {
+  if (e.target === overlay) closeCheckOutPage();
+});
+
+document.getElementById("cart").addEventListener("click", (e) => {
+  if (e.target.closest("#checkout-btn")) {
+    renderCheckOutPage();                       
+    document.getElementById("checkout-page").classList.add("on"); 
+  }
+});
+
+function closeCheckOutPage(){
+  document.getElementById("checkout-page").classList.remove("on");
+  document.getElementById("checkout-overlay").classList.remove("active");
+};
+
+let selectedMethod = null;
+
+function updateCheckoutState() {
+  const { totalHarga } = getTotalHarga();
+  const input = document.getElementById("jumlahDiterima");
+  const change = document.getElementById("change");
+  const finishBtn = document.getElementById("finish-btn");
+  if (!input || !change || !finishBtn) return;
+
+  if (selectedMethod === "qris") {
+    input.value = totalHarga.toLocaleString("id-ID");
+    input.disabled = true;
+    change.value = 0;
+    finishBtn.disabled = false;
+    return;
+  }
+
+  if (selectedMethod === "cash") {
+    input.disabled = false;
+    const uangBayar = Number(input.value.replace(/\D/g, ""));
+    const kembalian = uangBayar - totalHarga;
+
+    change.value = kembalian > 0 ? kembalian.toLocaleString("id-ID") : 0;
+    finishBtn.disabled = !(uangBayar > 0 && uangBayar >= totalHarga);
+    return;
+  }
+
+  input.value = "";
+  input.disabled = true;
+  change.value = "";
+  finishBtn.disabled = true;
+}
+
+function finished() {
+  const { totalHarga } = getTotalHarga();
+  const input = document.getElementById("jumlahDiterima");
+  const uangBayar = Number(input.value.replace(/\D/g, ""));
+
+  if (!selectedMethod) return;
+  if (selectedMethod === "cash" && uangBayar < totalHarga) return;
+
+  alert("Pembayaran berhasil!");
+  
+  cart.length = 0;  
+  renderCart();
+  closeCheckOutPage();
+}
+
+const checkoutPage = document.getElementById("checkout-page");
+
+checkoutPage.addEventListener("click", (e) => {
+  const methodBtn = e.target.closest(".buyMethod");
+  if (methodBtn) {
+    const newMethod = methodBtn.dataset.method;
+
+    if (newMethod !== selectedMethod) {
+      document.getElementById("jumlahDiterima").value = "";
+    }
+
+    selectedMethod = newMethod;
+    document.querySelectorAll(".buyMethod").forEach((el) => el.classList.remove("selected"));
+    methodBtn.classList.add("selected");
+    updateCheckoutState();
+    return;
+  }
+
+  if (e.target.closest("#finish-btn")) {
+    finished();
+  }
+});
+
+checkoutPage.addEventListener("input", (e) => {
+  if (e.target.id === "jumlahDiterima") updateCheckoutState();
+});
+
+function renderCheckOutPage(){
+  const checkOut = document.getElementById("checkout-page");
+  const { totalHarga } = getTotalHarga();
+
+  checkOut.innerHTML ="";
+
+  checkOut.innerHTML =`
+      <div class="checkout-header">
+        <h2>Checkout</h2>
+        <button onclick="closeCheckOutPage()">X</button>
+      </div>
+      <div class="checkout-total">
+        <div class="checkout-total-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#292522" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart preview-icon"><path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18"/><path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></svg>
+        </div>
+        <div class="checkout-total-info">
+        <h3>Total Payment</h3>
+        <h4 id="total-price">Rp ${totalHarga.toLocaleString("id-ID")}</h4>
+        </div>
+      </div>
+          <p>Metode Pembayaran</p>
+      <div class="checkout-option">
+        <button class="buyMethod selected" id="buyMethod" data-method="qris">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-qr-code preview-icon"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+          Qris
+        </button>
+        <button class="buyMethod" id="buyMethod" data-method="cash">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote preview-icon"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+          Cash
+        </button>
+      </div>
+      <p>Jumlah Diterima</p>
+      <div class="checkout-input">
+        <span>Rp</span>
+        <input type="text" name="" id="jumlahDiterima" disabled>
+      </div>
+      <p>kembalian</p>
+      <div class="checkout-input">
+        <span>Rp</span>
+        <input type="text" name="" id="change" disabled>
+      </div>
+      <div class="checkout-page-btn">
+        <button onclick="closeCheckOutPage()" class="cancel-btn">Batal</button>
+        <button class="finish-btn" id="finish-btn" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check preview-icon"><path d="M20 6 9 17l-5-5"/></svg>
+          Selesaikan Pembayaran
+        </button>
+      </div>
+  `;
+
+  document.getElementById("change").classList.add("change-style");
+}
+
+renderCheckOutPage();

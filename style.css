@@ -15,17 +15,7 @@
   --color-text-secondary: #716b66;
   --color-text-muted: #9a948e;
   --color-success: #2e7d32;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  --color-warning : #C62828;
 }
 
 @keyframes slideIn {
@@ -662,6 +652,12 @@ header {
   top: 20px;
   left: 400px;
   z-index: 999;
+  transition: all 0.3s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.checkout-page.on{
+  display: block;
 }
 
 .checkout-header{
@@ -684,8 +680,14 @@ header {
   background-color: var(--color-card);
   border: none;
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 800;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.checkout-header button:hover{
+  color: var(--color-warning);
+  transform: translateY(-2px);
 }
 
 .checkout-total{
@@ -829,6 +831,11 @@ header {
   transition: all 0.3s ease-in-out;
 }
 
+.checkout-page-btn .cancel-btn:hover{
+  background-color: var(--color-warning);
+  color: var(--color-card);
+}
+
 .checkout-page-btn .finish-btn{
   display: flex;
   justify-content: center;
@@ -840,6 +847,29 @@ header {
 }
 
 .checkout-page-btn button:hover{
+  background-color: var(--color-primary-dark);
   transform: translate(2px, 2px);
   box-shadow: 2px 2px 0 var(--color-text);
+}
+
+.change-style{
+  color: var(--color-success);
+}
+
+.finish-btn:disabled { 
+  cursor: not-allowed; 
+}
+
+.checkout-overlay {
+  position: fixed;
+  inset: 0;                         /* menutupi seluruh layar */
+  background: rgba(0, 0, 0, 0.7);   /* hitam transparan; ganti 1 untuk hitam pekat */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.checkout-overlay.active {
+  display: flex;
 }
