@@ -1,10 +1,20 @@
 window.addEventListener("load", () => {
   const loader = document.getElementById("loader");
+  const product = document.getElementById("products");
 
   setTimeout(() => {
-    loader.style.opacity = "0";
-    loader.style.visibility = "hidden";
-  }, 2000);
+    loader.classList.add("hide");
+  }, 1500);
+
+  loader.addEventListener(
+    "animationend",
+    () => {
+      product.classList.add("loaded");
+      document.body.classList.add("loaded");
+      loader.remove();
+    },
+    { once: true },
+  );
 });
 
 // data categories
@@ -549,48 +559,37 @@ renderProducts(products);
 
 let cart = [];
 
-function addToCart(productId){
+function addToCart(productId) {
   const productCart = products.find((product) => product.id === productId);
 
   const cartItems = cart.find((item) => item.id === productId);
 
   if (cartItems) {
     cartItems.quantity += 1;
-  }else{
-    cart.push({...productCart,
-      quantity: 1
-    });
+  } else {
+    cart.push({ ...productCart, quantity: 1 });
   }
-  
+
   renderCart();
 }
 
 document.addEventListener("click", (e) => {
-  if(e.target.classList.contains("add-product")){
-    
+  if (e.target.classList.contains("add-product")) {
     const productId = Number(e.target.dataset.id);
 
-    addToCart(productId)
+    addToCart(productId);
   }
-})
+});
 
 function decreaseQuantity(productId) {
-
-  const cartItem = cart.find(
-    item => item.id === productId
-  );
+  const cartItem = cart.find((item) => item.id === productId);
 
   if (!cartItem) return;
 
   if (cartItem.quantity > 1) {
-
     cartItem.quantity -= 1;
-
   } else {
-
-    const index = cart.findIndex(
-      item => item.id === productId
-    );
+    const index = cart.findIndex((item) => item.id === productId);
 
     cart.splice(index, 1);
   }
@@ -598,42 +597,37 @@ function decreaseQuantity(productId) {
   renderCart();
 }
 
-document.addEventListener("click", function(event) {
-
+document.addEventListener("click", function (event) {
   if (event.target.classList.contains("decrease-btn")) {
-
-    const productId = Number(
-      event.target.dataset.id
-    );
+    const productId = Number(event.target.dataset.id);
 
     decreaseQuantity(productId);
   }
-
 });
 
 function getTotalHarga() {
-    let subTotal = 0;
+  let subTotal = 0;
 
-    cart.forEach((item) => {
-        subTotal += item.price * item.quantity;
-    });
+  cart.forEach((item) => {
+    subTotal += item.price * item.quantity;
+  });
 
-    const tax = subTotal * 0.10;
-    const totalHarga = subTotal + tax;
+  const tax = subTotal * 0.1;
+  const totalHarga = subTotal + tax;
 
-    return{
-      tax,
-      subTotal,
-      totalHarga
-    };
-};
+  return {
+    tax,
+    subTotal,
+    totalHarga,
+  };
+}
 
 getTotalHarga();
 
 function renderCart() {
   const cartContainer = document.getElementById("cart");
   const { subTotal, tax, totalHarga } = getTotalHarga();
-  cartContainer.innerHTML="";
+  cartContainer.innerHTML = "";
 
   if (cart.length === 0) {
     cartContainer.innerHTML = `
@@ -661,7 +655,6 @@ function renderCart() {
 
     return;
   }
-
 
   cartContainer.innerHTML = `
     <div class="cart-header">
@@ -709,7 +702,6 @@ function renderCart() {
   const cartItems = document.querySelector(".cart-items");
 
   cart.forEach((item) => {
-
     cartItems.innerHTML += `
       <div class="cart-item">
 
@@ -773,15 +765,15 @@ overlay.addEventListener("click", (e) => {
 
 document.getElementById("cart").addEventListener("click", (e) => {
   if (e.target.closest("#checkout-btn")) {
-    renderCheckOutPage();                       
-    document.getElementById("checkout-page").classList.add("on"); 
+    renderCheckOutPage();
+    document.getElementById("checkout-page").classList.add("on");
   }
 });
 
-function closeCheckOutPage(){
+function closeCheckOutPage() {
   document.getElementById("checkout-page").classList.remove("on");
   document.getElementById("checkout-overlay").classList.remove("active");
-};
+}
 
 let selectedMethod = null;
 
@@ -825,8 +817,8 @@ function finished() {
   if (selectedMethod === "cash" && uangBayar < totalHarga) return;
 
   alert("Pembayaran berhasil!");
-  
-  cart.length = 0;  
+
+  cart.length = 0;
   renderCart();
   closeCheckOutPage();
 }
@@ -843,7 +835,9 @@ checkoutPage.addEventListener("click", (e) => {
     }
 
     selectedMethod = newMethod;
-    document.querySelectorAll(".buyMethod").forEach((el) => el.classList.remove("selected"));
+    document
+      .querySelectorAll(".buyMethod")
+      .forEach((el) => el.classList.remove("selected"));
     methodBtn.classList.add("selected");
     updateCheckoutState();
     return;
@@ -858,13 +852,13 @@ checkoutPage.addEventListener("input", (e) => {
   if (e.target.id === "jumlahDiterima") updateCheckoutState();
 });
 
-function renderCheckOutPage(){
+function renderCheckOutPage() {
   const checkOut = document.getElementById("checkout-page");
   const { totalHarga } = getTotalHarga();
 
-  checkOut.innerHTML ="";
+  checkOut.innerHTML = "";
 
-  checkOut.innerHTML =`
+  checkOut.innerHTML = `
       <div class="checkout-header">
         <h2>Checkout</h2>
         <button onclick="closeCheckOutPage()">X</button>
