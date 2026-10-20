@@ -489,7 +489,6 @@ function renderFilteredProducts() {
 
   const productList = document.getElementById("products");
 
-  // Jika tidak ada produk
   if (filteredProducts.length === 0) {
     productList.innerHTML = `
       <div class="product-not-found">
@@ -509,7 +508,6 @@ function renderFilteredProducts() {
       </div>
     `;
 
-    // Tombol untuk kembali menampilkan semua produk
     document.getElementById("reset-search").addEventListener("click", () => {
       currentCategory = "all";
       searchQuery = "";
@@ -611,8 +609,10 @@ function renderProducts(productList) {
       </div>
     `;
 
+
     productContainer.appendChild(productItem);
   });
+      animateProductRows();
 }
 
 renderProducts(products);
