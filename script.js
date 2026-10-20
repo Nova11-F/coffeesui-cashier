@@ -1,6 +1,5 @@
 window.addEventListener("load", () => {
   const loader = document.getElementById("loader");
-  const product = document.getElementById("products");
 
   setTimeout(() => {
     loader.classList.add("hide");
@@ -9,13 +8,74 @@ window.addEventListener("load", () => {
   loader.addEventListener(
     "animationend",
     () => {
-      product.classList.add("loaded");
       document.body.classList.add("loaded");
       loader.remove();
+
+      animateCategories();
+      animateProductRows();
     },
     { once: true },
   );
 });
+
+function animateCategories() {
+  if (!document.body.classList.contains("loaded")) {
+    return;
+  }
+
+  const container = document.getElementById("categories");
+
+  if (!container) return;
+
+  const buttons = container.querySelectorAll(":scope > *");
+
+  buttons.forEach((button, index) => {
+    button.classList.remove("slide-in");
+    button.style.animationDelay = "";
+
+    button.style.animationDelay = `${index * 0.1}s`;
+
+    button.classList.add("slide-in");
+  });
+}
+
+function animateProductRows() {
+  if (!document.body.classList.contains("loaded")) {
+    return;
+  }
+
+  const container = document.getElementById("products");
+
+  if (!container) return;
+
+  const cards = [...container.querySelectorAll(":scope > .product-item")];
+
+  cards.forEach((card) => {
+    card.classList.remove("animate-row");
+    card.style.animationDelay = "";
+  });
+
+  const rows = new Map();
+
+  cards.forEach((card) => {
+    const top = card.offsetTop;
+
+    if (!rows.has(top)) {
+      rows.set(top, []);
+    }
+
+    rows.get(top).push(card);
+  });
+
+  [...rows.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .forEach(([top, rowCards], rowIndex) => {
+      rowCards.forEach((card) => {
+        card.style.animationDelay = `${rowIndex * 0.25}s`;
+        card.classList.add("animate-row");
+      });
+    });
+}
 
 // data categories
 const categories = [
@@ -748,32 +808,56 @@ renderCart();
 
 const overlay = document.getElementById("checkout-overlay");
 
-document.getElementById("cart").addEventListener("click", (e) => {
-  if (e.target.closest("#checkout-btn")) {
-    renderCheckOutPage();
-    overlay.classList.add("active");
-  }
-});
+function openCheckOutPage() {
+  const checkoutPage = document.getElementById("checkout-page");
+
+  renderCheckOutPage();
+
+  overlay.classList.add("active");
+
+  checkoutPage.classList.remove("closing");
+  checkoutPage.style.display = "block";
+
+  checkoutPage.classList.remove("on");
+
+  void checkoutPage.offsetWidth;
+
+  checkoutPage.classList.add("on");
+}
 
 function closeCheckOutPage() {
-  overlay.classList.remove("active");
+  const checkoutPage = document.getElementById("checkout-page");
+
+  if (!checkoutPage.classList.contains("on")) return;
+
+  checkoutPage.classList.remove("on");
+  checkoutPage.classList.add("closing");
+
+  checkoutPage.addEventListener(
+    "animationend",
+    (event) => {
+      if (event.animationName !== "fadeIn") return;
+
+      checkoutPage.classList.remove("closing");
+      checkoutPage.style.display = "none";
+
+      overlay.classList.remove("active");
+    },
+    { once: true }
+  );
 }
+
+document.getElementById("cart").addEventListener("click", (e) => {
+  if (e.target.closest("#checkout-btn")) {
+    openCheckOutPage();
+  }
+});
 
 overlay.addEventListener("click", (e) => {
-  if (e.target === overlay) closeCheckOutPage();
-});
-
-document.getElementById("cart").addEventListener("click", (e) => {
-  if (e.target.closest("#checkout-btn")) {
-    renderCheckOutPage();
-    document.getElementById("checkout-page").classList.add("on");
+  if (e.target === overlay) {
+    closeCheckOutPage();
   }
 });
-
-function closeCheckOutPage() {
-  document.getElementById("checkout-page").classList.remove("on");
-  document.getElementById("checkout-overlay").classList.remove("active");
-}
 
 let selectedMethod = null;
 
