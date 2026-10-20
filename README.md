@@ -27,37 +27,68 @@ Website ini memungkinkan pengguna untuk:
 - 🧮 Menghitung subtotal, pajak, dan total pembayaran secara otomatis
 - 💳 Memproses pembayaran dengan metode **QRIS** atau **Cash**
 
-Proyek ini dibuat sebagai media pembelajaran dalam menerapkan konsep **DOM Manipulation**, **Event Delegation**, **State Management**, **Dynamic Rendering**, dan **Form Validation**.
-
+Proyek ini dibuat sebagai media pembelajaran dalam menerapkan konsep **DOM Manipulation**, **Event Delegation**, **State Management**, **Dynamic Rendering**, **CSS Animation**, **Responsive Web Design**, dan **Form Validation**.
 
 ## ✨ Fitur Utama
 
-- **🚀 Loading Screen**:
-  - Animasi pembuka bertuliskan *"Preparing your coffee..."* dengan progress bar saat aplikasi dimuat.
+**🚀 Loading Screen**
 
-- **🛍️ Katalog Produk**:
-  - Tampilan daftar produk lengkap dengan gambar.
-  - Filter produk berdasarkan **kategori**.
-  - Kolom **pencarian** untuk menemukan produk dengan cepat.
+- Animasi pembuka bertuliskan *"Preparing your coffee..."*.
+- Progress bar sebagai indikator proses pemuatan aplikasi.
 
-- **🧾 Keranjang Pesanan (Order Details)**:
-  - Tambah produk ke keranjang hanya dengan satu klik.
-  - Ubah jumlah pesanan menggunakan tombol `+` dan `-`.
-  - Tampilan khusus ketika keranjang masih kosong.
-  - Jumlah item di keranjang diperbarui otomatis.
+**🛍️ Katalog Produk**
 
-- **📊 Perhitungan Otomatis**:
+- Menampilkan daftar produk lengkap dengan gambar dan informasi harga.
+- Filter produk berdasarkan kategori.
+- Kolom pencarian untuk menemukan produk dengan cepat.
+- Animasi **Fade Up** pada setiap baris produk saat katalog ditampilkan.
+- Animasi **Slide In** pada kategori untuk memberikan transisi visual yang lebih dinamis.
+
+**🧾 Keranjang Pesanan (Order Details)**
+
+- Menambahkan produk ke keranjang hanya dengan satu klik.
+- Mengubah jumlah pesanan menggunakan tombol `+` dan `-`.
+- Menampilkan tampilan khusus ketika keranjang masih kosong.
+- Memperbarui jumlah item dan ringkasan pembayaran secara otomatis.
+
+**🎬 Animasi Antarmuka**
+
+Coffeesui Cashier menggunakan animasi untuk membuat interaksi terasa lebih halus dan meningkatkan pengalaman pengguna.
+
+| Elemen | Animasi | Perilaku |
+| --- | --- | --- |
+| Body / konten utama | `Fade Up` | Konten muncul secara bertahap dengan gerakan dari bawah ke atas. |
+| Baris produk | `Fade Up` | Setiap baris produk muncul dengan efek memudar dan bergerak ke atas. |
+| Kategori produk | `Slide In` | Elemen kategori masuk dengan gerakan horizontal. |
+| Halaman checkout | `Fade Up` | Popup checkout muncul secara halus dari bawah ke atas. |
+| Halaman checkout saat ditutup | `Fade In` | Efek memudar digunakan pada transisi penutupan checkout. |
+
+Animasi diterapkan menggunakan CSS dan mekanisme JavaScript untuk mengatur tampilan elemen sesuai interaksi pengguna.
+
+- **📊 Perhitungan Otomatis**
   - **Subtotal**: total harga seluruh produk dikalikan jumlahnya.
   - **Tax (10%)**: pajak dihitung otomatis dari subtotal.
   - **Total**: subtotal ditambah pajak, dengan format Rupiah (`id-ID`).
 
-- **💳 Halaman Checkout (Popup)**:
+- **💳 Halaman Checkout (Popup)**
   - Tampil sebagai *overlay* dengan latar belakang gelap.
   - Dua pilihan metode pembayaran: **QRIS** dan **Cash**.
   - **QRIS**: jumlah diterima terisi otomatis sesuai total dan kembalian otomatis `0`.
   - **Cash**: masukkan jumlah uang yang diterima, kembalian dihitung secara real-time.
   - Tombol **Selesaikan Pembayaran** hanya aktif jika metode sudah dipilih dan uang yang diterima mencukupi.
   - Keranjang otomatis dikosongkan setelah transaksi selesai.
+
+**📱 Responsive Web Design**
+
+Website telah dibuat responsif agar tata letak dan komponen antarmuka dapat menyesuaikan ukuran layar perangkat.
+
+- **Desktop**: katalog produk dan detail pesanan ditampilkan berdampingan untuk memudahkan proses kasir.
+- **Tablet**: tata letak dan ukuran komponen menyesuaikan ruang layar yang tersedia.
+- **Mobile**: komponen disusun agar tetap mudah diakses pada layar yang lebih kecil.
+- Area katalog produk mendukung pengguliran tanpa mengganggu komponen lain sesuai tata letak responsif yang diterapkan.
+- Popup checkout menyesuaikan ukuran layar agar formulir pembayaran tetap mudah digunakan.
+
+Implementasi responsivitas menggunakan CSS, media queries, dan pengaturan layout yang disesuaikan dengan kebutuhan setiap perangkat.
 
 
 ## 🛠️ Teknologi yang Digunakan
@@ -133,24 +164,26 @@ Buka browser dan akses halaman melalui `http://localhost:8000`.
 
 Proyek ini dibuat sebagai latihan dalam mengembangkan aplikasi kasir sederhana dengan menerapkan:
 
-- Struktur kode JavaScript yang rapi dan mudah dipelihara
-- Manipulasi DOM & Event Delegation
-- Dynamic Rendering menggunakan template literal
-- Validasi input dan pengelolaan state pembayaran
-- Format mata uang dengan `toLocaleString("id-ID")`
-- User Interface (UI) & User Experience (UX) modern
+- Struktur kode JavaScript yang rapi dan mudah dipelihara.
+- Manipulasi DOM dan Event Delegation.
+- Dynamic Rendering menggunakan template literal.
+- Validasi input dan pengelolaan state pembayaran.
+- Animasi UI menggunakan CSS dan JavaScript.
+- Responsive Web Design menggunakan CSS dan media queries.
+- Format mata uang dengan `toLocaleString("id-ID")`.
+- Prinsip User Interface (UI) dan User Experience (UX) modern.
 
 
 # 🚀 Rencana Pengembangan
 
 Beberapa fitur yang akan dikembangkan di masa mendatang:
 
-- 🕘 Riwayat Transaksi
-- 🖨️ Cetak Struk Pembayaran
-- 💾 Penyimpanan Data (localStorage / Database)
-- 🛠️ Manajemen Produk (Tambah, Ubah, Hapus)
-- 📱 Penyempurnaan Tampilan Responsif untuk Tablet & Ponsel
-- 🗄️ Backend API Integration (Node.js / Express)
+- 🕘 Riwayat transaksi.
+- 🖨️ Cetak struk pembayaran.
+- 💾 Penyimpanan data menggunakan `localStorage` atau database.
+- 🛠️ Manajemen produk (Tambah, Ubah, Hapus).
+- 🗄️ Integrasi backend API menggunakan Node.js / Express.
+- ♿ Penyempurnaan aksesibilitas dan dukungan `prefers-reduced-motion`.
 
 
 ## 📜 Lisensi
